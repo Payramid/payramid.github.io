@@ -71,59 +71,39 @@ between 30 and 150 employees — and one licensed payment partner.
 If either sounds like you, the form at
 **[payramid.github.io](https://payramid.github.io#pilot)** is the whole application.
 
-## Before you publish
+## Where the pilot form goes
 
-Four things, in this order. The first two are launch blockers: until they are
-done the pilot form cannot deliver anything, and it says so on screen rather
-than pretending it worked.
+**The endpoint lives in one place:** the `action` on `<form id="pilot-form">` in
+`index.html`. That attribute is what a browser with JavaScript disabled posts
+to, and it cannot be filled in from JavaScript — so `site.js` reads the endpoint
+back out of it rather than keeping its own copy. One value, one place, no way
+for the two to drift apart and quietly send applications somewhere else.
 
-**1. The form endpoint — one line, one file.**
+To point the form somewhere else, change that attribute and nothing else.
 
-Create a form at [formspree.io](https://formspree.io) (the free tier allows 50
-submissions a month) and copy the endpoint it gives you. It looks like
-`https://formspree.io/f/abcdwxyz`. Put it in exactly one place — the `action`
-on `<form id="pilot-form">` in `index.html`:
+**The fallback address** is `FALLBACK_EMAIL` in `assets/site.js`. It is only
+ever shown when a submission fails, so it has to be a mailbox somebody reads.
+If it is ever set back to a placeholder the page offers no address at all,
+which is the honest default — better than sending someone to a dead inbox.
 
-```html
-action="https://formspree.io/f/REPLACE_WITH_FORM_ID"
-```
+Submissions are delivered by [Formspree](https://formspree.io); the free tier
+allows 50 a month. Worth watching that ceiling if the page ever gets picked up.
 
-That attribute is what a browser with JavaScript disabled posts to, and it
-cannot be filled in from JavaScript. So `site.js` reads the endpoint back out
-of it rather than keeping its own copy: one value, one place, no way for the
-two to drift apart and quietly send applications somewhere else.
+## Deploying a change
 
-**2. The fallback address.**
+**Bump the cache-buster.** Pages puts a 10-minute cache on static assets and the
+headers are not configurable, so the stylesheet and script are referenced with a
+version query — currently `styles.css?v=4` and `site.js?v=4`. Increment those in
+**both** `index.html` and `404.html` whenever either file changes, or returning
+visitors keep the old copy for up to ten minutes and the change looks like it
+did not deploy.
 
-In `assets/site.js`:
+**Keep working notes out of the published branch.** Anything committed here is
+served verbatim at its own URL, including files nobody linked to. Planning
+documents, review notes and screenshots belong somewhere else.
 
-```js
-var FALLBACK_EMAIL = "REPLACE_WITH_CONTACT_EMAIL";
-```
-
-Put a mailbox somebody actually reads there. It is only ever shown when a
-submission fails, so a dead address here is worse than none — while the
-placeholder is in place the page simply doesn't offer an email at all, which is
-the honest default.
-
-Then send yourself a test submission and confirm it arrives.
-
-**3. Delete `DESIGN_PLAN.md`.**
-
-It is the working plan for the page, not public material, and GitHub Pages will
-happily serve it at `/DESIGN_PLAN.md` to anyone who guesses the filename.
-Delete it from the published branch.
-
-**4. Bump the cache-buster.**
-
-Pages sets a 10-minute cache on static assets and the headers are not
-configurable, so the stylesheet and script are referenced as
-`styles.css?v=2` / `site.js?v=2`. Increment both numbers in `index.html` and
-`404.html` whenever either file changes, or returning visitors keep the old one
-for up to ten minutes.
-
-Also worth confirming once: **Enforce HTTPS** is ticked in the repository's
-Pages settings.
+Pushing to `main` publishes. A build takes a minute or two, and assets can 404
+until it finishes.
 
 ## About this repository
 
