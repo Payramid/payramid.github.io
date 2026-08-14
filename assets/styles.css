@@ -1,0 +1,1928 @@
+/* ============================================================
+   Payramid · Sunlit Clay — landing site
+   Tokens and the motion system are lifted from the product's
+   frontend/src/index.css so the site and the app read as one thing.
+
+   Written mobile-first. Structural breakpoints only — everything
+   continuous is handled by clamp():
+
+     520   .grid--4        1 → 2 columns
+     560   .field-row      1 → 2 columns
+     620   hero button row stacked → inline
+     640   .status__row    1 → 2 columns
+     700   hero lockup, copy and pipeline return to full size
+     760   .footer__top    stacked → row
+     900   .grid--3 1 → 3 · .split 1 → 2 · nav disclosure → inline links
+    1200   .grid--4        2 → 4 columns
+    1440 / 1680 / 1920 / 2240 / 2560   container tiers (+ editorial
+                                       section head from 1680)
+
+   There is deliberately no breakpoint between 640 and 900: the old
+   820px line flipped the card grids from 1 to 3 columns 14px later
+   and produced 249px towers on an iPad Pro.
+   ============================================================ */
+
+/* ---- Design tokens ------------------------------------------------------- */
+:root {
+  --font-sans: "Geist", ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --font-mono: "Geist Mono", ui-monospace, "SF Mono", monospace;
+  --font-serif: "Instrument Serif", Georgia, "Times New Roman", serif;
+  --font-display: "Cinzel", var(--font-serif);
+
+  --page: #fdf7ed;
+  --card: #fffcf6;
+  --ink: #1a1a1a;
+  --muted: #6b6157;
+  --line: #eadfcb;
+  --line-soft: #e8decb;
+  --clay: #f4a950;
+  --clay-deep: #e89638;
+  --copper: #c75b39;
+  --teal: #0f4c5c;
+  --teal-light: #0f9b8e;
+  --steel: #2c6e93;
+
+  /* Text-safe variants of the warm brand colours. The clay and copper
+     fills stay exactly as they are; these are only used where the colour
+     has to carry actual words on a cream surface. */
+  --clay-text: #a8482a; /* 5.66:1 on --card */
+  --copper-text: #b04a2b; /* 5.31:1 on --card */
+  --teal-text: #0b6b62; /* 6.23:1 on --card */
+  /* solid, not an alpha of --muted: 4.70:1 on the white field, still a
+     clear step lighter than entered text so an empty field still reads
+     as empty */
+  --placeholder: #7c7268;
+
+  /* Fluid type. Every preferred term is rem + vw so a user's browser
+     font-size preference still counts. */
+  --fs-h1: clamp(2.25rem, 1.5rem + 3.333vw, 5.75rem); /* 36 → 92 */
+  --fs-h2: clamp(1.75rem, 1.3rem + 2.05vw, 4rem); /* 28 → 64 */
+  --fs-h3: clamp(1.09rem, 1rem + 0.417vw, 1.625rem); /* 17.4 → 26 */
+  --fs-lede: clamp(1rem, 0.93rem + 0.32vw, 1.375rem); /* 16 → 22 */
+  --fs-body: clamp(0.906rem, 0.87rem + 0.16vw, 1.125rem); /* 14.5 → 18 */
+  --fs-micro: clamp(0.656rem, 0.62rem + 0.16vw, 0.845rem); /* 10.5 → 13.5 */
+  --fs-btn: clamp(0.875rem, 0.82rem + 0.18vw, 1rem);
+
+  /* Fluid space */
+  --space-section: clamp(68px, 3.4rem + 3.4vw, 168px);
+  --gutter: clamp(18px, 0.875rem + 1.5vw, 56px);
+  --grid-gap: clamp(14px, 0.5rem + 1vw, 32px);
+  --space-head: clamp(32px, 1.5rem + 2vw, 76px);
+  --radius: clamp(16px, 0.75rem + 0.5vw, 26px);
+  --radius-sm: 14px;
+  --nav-h: clamp(56px, 3rem + 0.6vw, 76px);
+
+  /* The band of the next section that is always left showing under the
+     hero. See .section-lead. */
+  --peek: clamp(72px, 9vh, 132px);
+
+  /* Hero brand lockup — one number drives the mark, the wordmark and
+     the underline so the whole assembly scales as a unit. */
+  --build-size: clamp(96px, 6vw + 40px, 210px);
+
+  --max: 1140px;
+}
+@supports (height: 100svh) {
+  :root {
+    --peek: clamp(72px, 9svh, 132px);
+  }
+}
+
+/* Container tiers. Stepped rather than a single clamp() because the
+   container governs integer-column grids — each step is a composition
+   that can be checked on its own. */
+@media (min-width: 1440px) {
+  :root {
+    --max: 1240px;
+  }
+}
+@media (min-width: 1680px) {
+  :root {
+    --max: 1380px;
+  }
+}
+@media (min-width: 1920px) {
+  :root {
+    --max: 1520px;
+  }
+}
+@media (min-width: 2240px) {
+  :root {
+    --max: 1680px;
+  }
+}
+@media (min-width: 2560px) {
+  :root {
+    --max: 1760px;
+  }
+}
+
+/* ---- Reset / base -------------------------------------------------------- */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+html {
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  scroll-behavior: smooth;
+  scroll-padding-top: calc(var(--nav-h) + 12px);
+}
+body {
+  margin: 0;
+  font-family: var(--font-sans);
+  background: var(--page);
+  color: var(--ink);
+  font-size: 16px;
+  line-height: 1.6;
+  overflow-wrap: break-word;
+}
+h1,
+h2,
+h3,
+h4,
+p,
+ul,
+ol,
+figure {
+  margin: 0;
+}
+ul {
+  padding: 0;
+  list-style: none;
+}
+a {
+  color: inherit;
+  text-decoration: none;
+}
+img,
+svg {
+  max-width: 100%;
+}
+button,
+input,
+select,
+textarea {
+  font: inherit;
+  color: inherit;
+}
+
+/* ---- Focus ---------------------------------------------------------------
+   One visible ring everywhere, keyboard only. Teal on the cream page,
+   cream inside the two dark panels. */
+:focus-visible {
+  outline: 2px solid var(--teal);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+.hero :focus-visible,
+.panel-dark :focus-visible {
+  outline-color: #fdf7ed;
+}
+.skip-link {
+  position: absolute;
+  left: 12px;
+  top: -100px;
+  z-index: 100;
+  background: var(--card);
+  color: var(--ink);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 10px 18px;
+  font-size: 14px;
+  transition: top 0.18s ease;
+}
+.skip-link:focus-visible {
+  top: 12px;
+}
+
+/* ---- Type voices (same roles as the app) --------------------------------- */
+.font-mono,
+code,
+kbd,
+samp,
+pre {
+  font-family: var(--font-mono);
+}
+/* Serif numerals — the "money" voice */
+.font-money {
+  font-family: var(--font-serif);
+  font-variant-numeric: tabular-nums lining-nums;
+  letter-spacing: -0.01em;
+}
+/* Tri-stop gradient clipped into the glyph */
+.gradient-num {
+  background: linear-gradient(105deg, #0f4c5c 0%, #c75b39 58%, #f4a950 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+}
+/* Brand display face — big PAYRAMID moments only */
+.font-display {
+  font-family: var(--font-display);
+  letter-spacing: 0.1em;
+  font-weight: 700;
+}
+/* Emphasis voice — italic serif inside headlines */
+.em-serif {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-weight: 400;
+  letter-spacing: -0.005em;
+}
+
+/* ---- Layout primitives --------------------------------------------------- */
+.wrap {
+  width: 100%;
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: 0 var(--gutter);
+}
+.section {
+  padding: var(--space-section) 0;
+}
+.section--tight {
+  padding-block: calc(var(--space-section) * 0.72);
+}
+.section--tint {
+  background: #faf3e6;
+  border-block: 1px solid var(--line);
+}
+.kicker {
+  font-family: var(--font-mono);
+  font-size: var(--fs-micro);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 14px;
+}
+/* Dark-panel text sits in two tiers, both set so they hold at the core of
+   the clay blob and not merely on the flat panel: 0.86 for body-grade
+   copy, 0.82 for the quiet mono labels. Headings stay full cream. */
+.kicker--light {
+  color: rgba(253, 247, 237, 0.82);
+}
+h2.h2 {
+  font-size: var(--fs-h2);
+  line-height: 1.08;
+  letter-spacing: -0.025em;
+  font-weight: 700;
+  max-width: 22ch;
+}
+h3.h3 {
+  font-size: var(--fs-h3);
+  line-height: 1.3;
+  letter-spacing: -0.012em;
+  font-weight: 600;
+}
+.lede {
+  font-size: var(--fs-lede);
+  line-height: 1.65;
+  color: var(--muted);
+  max-width: 62ch;
+  margin-top: 18px;
+}
+.section-head {
+  margin-bottom: var(--space-head);
+}
+
+/* ---- 404 ----------------------------------------------------------------- */
+/* 404.html borrows the nav, the footer and the type scale wholesale; this is
+   the only thing it needs of its own. The heading rule repeats h2.h2 because
+   that selector is element-qualified and the page leads with an h1. */
+.error-page {
+  display: flex;
+  align-items: center;
+  min-height: 58vh;
+}
+.error-page h1 {
+  font-size: var(--fs-h2);
+  line-height: 1.08;
+  letter-spacing: -0.025em;
+  font-weight: 700;
+  max-width: 22ch;
+}
+.error-page .btn {
+  margin-top: 30px;
+}
+
+/* ---- Buttons ------------------------------------------------------------- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  min-height: 44px;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  padding: 13px 26px;
+  font-size: var(--fs-btn);
+  font-weight: 500;
+  cursor: pointer;
+  white-space: nowrap;
+}
+/* Ink on clay, not white on clay: white measured 1.97:1, ink is 8.81:1. */
+.btn--primary {
+  background: var(--clay);
+  color: var(--ink);
+}
+.btn--primary:hover {
+  background: var(--clay-deep);
+}
+.btn--ghost {
+  background: transparent;
+  border-color: var(--line);
+  color: var(--ink);
+}
+.btn--ghost:hover {
+  border-color: var(--clay);
+  color: var(--clay-text);
+}
+.btn--ghost-light {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(253, 247, 237, 0.28);
+  color: #fdf7ed;
+}
+.btn--ghost-light:hover {
+  background: rgba(255, 255, 255, 0.13);
+  border-color: rgba(253, 247, 237, 0.5);
+}
+.btn--sm {
+  min-height: 38px;
+  padding: 9px 19px;
+  font-size: clamp(0.812rem, 0.78rem + 0.12vw, 0.906rem);
+}
+.btn-row {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 14px;
+  margin-top: 24px;
+}
+/* Under 620 the second action is a text link, not a second full-width
+   pill — better hierarchy and 40px shorter. */
+.btn-row .btn--ghost-light {
+  background: none;
+  border: 0;
+  padding: 0;
+  width: auto;
+  align-self: flex-start;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  min-height: 44px;
+}
+@media (min-width: 620px) {
+  .btn-row {
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px;
+    margin-top: 32px;
+  }
+  .btn-row .btn--ghost-light {
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(253, 247, 237, 0.28);
+    padding: 13px 26px;
+    align-self: auto;
+    text-decoration: none;
+  }
+}
+
+/* ---- Nav ----------------------------------------------------------------- */
+.nav {
+  position: sticky;
+  top: 0;
+  z-index: 60;
+  background: rgba(253, 247, 237, 0.82);
+  backdrop-filter: saturate(160%) blur(14px);
+  -webkit-backdrop-filter: saturate(160%) blur(14px);
+  border-bottom: 1px solid transparent;
+  transition: border-color 0.25s ease, background-color 0.25s ease;
+}
+.nav.is-stuck {
+  border-bottom-color: var(--line);
+}
+.nav__inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: clamp(12px, 2vw, 24px);
+  height: var(--nav-h);
+}
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.brand__word {
+  font-family: var(--font-display);
+  font-size: clamp(0.812rem, 0.75rem + 0.2vw, 1.062rem);
+  letter-spacing: 0.14em;
+  color: var(--teal);
+  font-weight: 700;
+}
+.nav__links {
+  display: none;
+  align-items: center;
+  gap: clamp(20px, 2vw, 38px);
+}
+.nav__links a {
+  font-size: clamp(0.875rem, 0.84rem + 0.1vw, 0.938rem);
+  color: var(--muted);
+  transition: color 0.18s ease;
+}
+.nav__links a:hover {
+  color: var(--ink);
+}
+.nav__cta {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* Small-screen disclosure. <details> so it works with JS disabled and
+   handles its own expanded state. */
+.nav__menu {
+  margin-left: auto;
+}
+.nav__menu-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  padding: 0 4px;
+  font-family: var(--font-mono);
+  font-size: var(--fs-micro);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--muted);
+  cursor: pointer;
+  list-style: none;
+}
+.nav__menu-btn::-webkit-details-marker {
+  display: none;
+}
+.nav__bars {
+  display: grid;
+  gap: 4px;
+  width: 18px;
+}
+.nav__bars i {
+  display: block;
+  height: 1.5px;
+  background: currentColor;
+  border-radius: 2px;
+  transition: transform 0.2s cubic-bezier(0.2, 0.9, 0.25, 1.1);
+}
+.nav__menu[open] .nav__bars i:first-child {
+  transform: translateY(2.75px) rotate(45deg);
+}
+.nav__menu[open] .nav__bars i:last-child {
+  transform: translateY(-2.75px) rotate(-45deg);
+}
+/* Anchored to the sticky header, not to the summary, so it spans the
+   full width without needing 100vw (which is wrong by a scrollbar). */
+.nav__panel {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  display: grid;
+  padding: 6px var(--gutter) 14px;
+  background: var(--page);
+  border-bottom: 1px solid var(--line);
+}
+.nav__panel a {
+  display: flex;
+  align-items: center;
+  min-height: 44px;
+  font-size: 16px;
+  color: var(--ink);
+  border-bottom: 1px solid var(--line-soft);
+}
+.nav__panel a:last-child {
+  border-bottom: 0;
+}
+
+/* Below 400px the word "Menu" is the difference between fitting the
+   header row and overflowing it — the bars carry it, the label stays
+   for screen readers. */
+@media (max-width: 399px) {
+  .nav__menu-label {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+  .nav__menu-btn {
+    gap: 0;
+  }
+  .nav__cta .btn--sm {
+    padding: 9px 14px;
+  }
+}
+
+@media (min-width: 900px) {
+  .nav__links {
+    display: flex;
+  }
+  .nav__menu {
+    display: none;
+  }
+}
+
+/* ---- Hero ---------------------------------------------------------------- */
+/* The hero is sized so exactly --peek pixels of #problem's lead band are
+   left showing at the fold, at every viewport height. If hero copy ever
+   grows past this min-height the guarantee lapses — re-check 1366×768
+   and 1920×1080 after any copy change. */
+.hero {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: max(520px, calc(100vh - var(--nav-h) - var(--peek)));
+  color: #fdf7ed;
+  background: linear-gradient(135deg, #0f4c5c 0%, #155566 50%, #0f4c5c 100%);
+}
+@supports (height: 100svh) {
+  .hero {
+    min-height: max(520px, calc(100svh - var(--nav-h) - var(--peek)));
+  }
+}
+.hero > * {
+  position: relative;
+  z-index: 1;
+}
+.hero__inner {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: clamp(16px, 2vh, 44px);
+  align-items: center;
+  padding-block: clamp(40px, 5vh, 96px);
+}
+.hero h1 {
+  font-size: var(--fs-h1);
+  line-height: 1.02;
+  letter-spacing: -0.035em;
+  font-weight: 700;
+  max-width: 16ch;
+}
+.hero h1 .em-serif {
+  opacity: 0.94;
+}
+.hero__sub {
+  margin-top: clamp(14px, 1.6vh, 24px);
+  font-size: var(--fs-lede);
+  line-height: 1.6;
+  /* 0.86 rather than 0.76: this text can sit over the clay blob, and the
+     alpha has to hold at the blob core, not just on the flat panel */
+  color: rgba(253, 247, 237, 0.86);
+  max-width: 52ch;
+}
+/* short / long copy pair — see the comment beside them in the markup */
+.u-lg {
+  display: none;
+}
+@media (min-width: 700px) {
+  .u-sm {
+    display: none;
+  }
+  .u-lg {
+    display: inline;
+  }
+}
+.hero__build {
+  order: -1;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  margin-bottom: 4px;
+}
+.pyramid-build {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 12px;
+  user-select: none;
+}
+.pyramid-build > svg {
+  width: 62px;
+  height: 62px;
+}
+.pyramid-build__word {
+  display: flex;
+  gap: 2px;
+  justify-content: center;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 24px;
+  line-height: 1;
+  color: #fdf7ed;
+}
+/* the drawn underline needs its full width to read as a scribble */
+.pm-rule {
+  display: none;
+}
+.pipeline {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(10px, 2.5vw, 26px);
+  margin-top: clamp(24px, 3vh, 44px);
+  padding-top: clamp(18px, 2vh, 28px);
+  border-top: 1px solid rgba(253, 247, 237, 0.16);
+}
+.pipeline__item {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+  min-width: 0;
+}
+.pipeline__k {
+  font-family: var(--font-mono);
+  font-size: var(--fs-micro);
+  letter-spacing: 0.14em;
+  color: rgba(253, 247, 237, 0.82);
+}
+.pipeline__v {
+  font-size: clamp(0.688rem, 0.62rem + 0.5vw, 0.812rem);
+  line-height: 1.3;
+  hyphens: auto;
+  color: rgba(255, 255, 255, 0.92);
+}
+.hero__foot {
+  display: none;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+  padding: 0 0 26px;
+  font-family: var(--font-mono);
+  font-size: var(--fs-micro);
+  letter-spacing: 0.1em;
+  color: rgba(253, 247, 237, 0.82);
+}
+
+@media (min-width: 700px) {
+  .hero__build {
+    justify-content: center;
+    margin-bottom: 0;
+  }
+  .pyramid-build {
+    flex-direction: column;
+    gap: 20px;
+  }
+  .pyramid-build > svg {
+    width: var(--build-size);
+    height: var(--build-size);
+  }
+  .pyramid-build__word {
+    gap: 3px;
+    font-size: calc(var(--build-size) * 0.267);
+  }
+  .pm-rule {
+    display: block;
+    width: calc(var(--build-size) * 1.55);
+    height: auto;
+    margin-top: 2px;
+  }
+  .pipeline__item {
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
+  }
+  .hero__foot {
+    display: flex;
+  }
+}
+@media (min-width: 900px) {
+  .hero__inner {
+    grid-template-columns: 1.15fr 0.85fr;
+    gap: clamp(40px, 4vw, 72px);
+  }
+  .hero__build {
+    order: 0;
+  }
+}
+@media (min-width: 1440px) {
+  .hero__inner {
+    grid-template-columns: 1.2fr 0.8fr;
+    gap: clamp(48px, 4vw, 96px);
+  }
+}
+@media (min-width: 1920px) {
+  .hero__inner {
+    grid-template-columns: 1.25fr 0.75fr;
+  }
+}
+
+/* ---- Short viewports (height-keyed) --------------------------------------
+   The compact hero treatment above is keyed on WIDTH, so a wide-but-short
+   viewport — a landscape phone, a 1024×600 netbook, or a 1280×800 desktop
+   at 200% zoom, which reflows to 640×400 CSS px — was still being served
+   the full desktop hero. These blocks mirror the compact rules on height.
+
+   Keyed on max-height and not on orientation: 200% zoom is a short
+   viewport, not a landscape one, and Reflow has to hold there.
+
+   Three bands:
+     H >= 700   peek guaranteed, nothing here applies
+     460–700    peek guaranteed via the compact treatment
+     H < 460    peek released by design; the guarantee becomes the primary
+                CTA above the fold
+
+   These must stay AFTER the width-keyed hero rules — they win on source
+   order at equal specificity, which is how height beats width here.
+   Any future change to hero copy must be re-checked at 640×400 and
+   844×390, not only at the tall viewports. */
+@media (max-height: 700px) {
+  :root {
+    --peek: 56px; /* hairline + kicker + cue still fit */
+  }
+
+  /* Drop the 520px floor. That floor is there to stop a tall viewport
+     collapsing the hero, but in this band it is the thing that eats the
+     peek — at 1024×600 it pinned the hero at 520px inside 487px of
+     available space and left only 23px of the lead band showing. Here
+     the hero is sized to exactly the space that is left. */
+  .hero {
+    min-height: calc(100vh - var(--nav-h) - var(--peek));
+  }
+
+  .hero__inner {
+    grid-template-columns: 1fr;
+    padding-block: 24px;
+    gap: 16px;
+  }
+  .hero__build {
+    order: -1;
+    justify-content: flex-start;
+    margin-bottom: 4px;
+  }
+  .pyramid-build {
+    flex-direction: row;
+    align-items: center;
+    gap: 12px;
+  }
+  .pyramid-build > svg {
+    width: 56px;
+    height: 56px;
+  }
+  .pyramid-build__word {
+    gap: 2px;
+    font-size: 22px;
+  }
+  .pm-rule {
+    display: none;
+  }
+
+  .hero__foot {
+    display: none;
+  }
+  .hero h1 {
+    font-size: clamp(1.75rem, 1.2rem + 2.4vw, 3rem);
+  }
+  .hero__sub {
+    margin-top: 12px;
+  }
+  .hero .kicker {
+    margin-bottom: 8px;
+  }
+
+  /* force the short copy at any width — height wins over the 700px
+     width switch on these two spans */
+  .u-lg {
+    display: none;
+  }
+  .u-sm {
+    display: inline;
+  }
+
+  /* The pipeline costs ~95px including its rule and margin, and there is
+     nowhere in this band that can afford it: measured peek without this
+     rule was 8px at 390×621, 27px at 390×640, 29px at 360×640 and 31px
+     at 430×621 — a sliced kicker, which is exactly what the band exists
+     to prevent. The same three steps are restated in #how. */
+  .pipeline {
+    display: none;
+  }
+}
+
+@supports (height: 100svh) {
+  @media (max-height: 700px) {
+    .hero {
+      min-height: calc(100svh - var(--nav-h) - var(--peek));
+    }
+  }
+}
+
+@media (max-height: 540px) {
+  .hero__sub {
+    display: none; /* headline and CTA carry it alone */
+  }
+}
+
+@media (max-height: 460px) {
+  .hero {
+    min-height: 0; /* peek guarantee formally released */
+  }
+  .hero__inner {
+    padding-block: 18px;
+  }
+}
+
+/* ---- The fold band ------------------------------------------------------
+   The first thing below the hero is a fixed-height unit — hairline,
+   label, scroll cue — so whatever the viewport height, the peek is a
+   complete composition and the headline underneath is never sliced. */
+.section--lead {
+  padding-top: 0;
+}
+.section-lead {
+  min-height: var(--peek);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  border-top: 1px solid var(--line);
+}
+.section-lead .kicker {
+  margin-bottom: 0;
+}
+.section-lead__cue {
+  display: inline-flex;
+  color: var(--muted);
+  opacity: 0.7;
+  transition: opacity 0.4s ease;
+}
+.section-lead.is-passed .section-lead__cue {
+  opacity: 0;
+}
+.section-lead + .section-head {
+  margin-top: clamp(20px, 2vw, 40px);
+}
+
+/* ---- Cards --------------------------------------------------------------- */
+.grid {
+  display: grid;
+  gap: var(--grid-gap);
+  grid-template-columns: 1fr;
+}
+.card {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: clamp(22px, 1rem + 1.2vw, 34px) clamp(20px, 1rem + 1vw, 32px);
+}
+.card__num {
+  font-family: var(--font-mono);
+  font-size: var(--fs-micro);
+  letter-spacing: 0.18em;
+  color: var(--clay-text);
+  margin-bottom: 18px;
+}
+.card p {
+  margin-top: 12px;
+  font-size: var(--fs-body);
+  line-height: 1.62;
+  color: var(--muted);
+  max-width: 46ch;
+}
+.card--problem {
+  background: transparent;
+  border-style: dashed;
+  border-color: var(--line-soft);
+}
+.card--problem .card__num {
+  color: var(--copper-text);
+}
+.icon-badge {
+  width: clamp(36px, 2rem + 0.6vw, 52px);
+  height: clamp(36px, 2rem + 0.6vw, 52px);
+  border-radius: clamp(10px, 0.5rem + 0.25vw, 16px);
+  display: grid;
+  place-items: center;
+  background: rgba(244, 169, 80, 0.14);
+  color: var(--clay-text);
+  margin-bottom: 20px;
+}
+
+@media (min-width: 520px) {
+  .grid--4 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+/* Between 600 and 900 a full-width numbered card reads as a stretched
+   letterbox, so the numeral moves into its own column. */
+@media (min-width: 600px) and (max-width: 899px) {
+  #problem .card--problem {
+    display: grid;
+    grid-template-columns: clamp(60px, 10vw, 120px) 1fr;
+    column-gap: clamp(16px, 3vw, 32px);
+    align-items: start;
+  }
+  #problem .card--problem .card__num {
+    grid-column: 1;
+    grid-row: 1 / span 2;
+    margin-bottom: 0;
+  }
+  #problem .card--problem .h3,
+  #problem .card--problem p {
+    grid-column: 2;
+  }
+}
+@media (min-width: 900px) {
+  .grid--2 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .grid--3 {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+@media (min-width: 1200px) {
+  /* never 3 columns — a 3-up of four cards orphans the fourth */
+  .grid--4 {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+/* Editorial section head: past 1680 the width is spent on structure
+   rather than on inflating a single column. */
+@media (min-width: 1680px) {
+  .section-head {
+    display: grid;
+    grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+    gap: 0 clamp(40px, 4vw, 88px);
+    align-items: end;
+  }
+  .section-head > .kicker {
+    grid-column: 1 / -1;
+    grid-row: 1;
+  }
+  .section-head > .h2 {
+    grid-column: 1;
+    grid-row: 2;
+  }
+  .section-head > .lede {
+    grid-column: 2;
+  }
+  /* the lede that sits beside the headline shares its row and baseline;
+     any further paragraphs stack underneath it in the same column */
+  .section-head > .h2 + .lede {
+    grid-row: 2;
+    margin-top: 0;
+    padding-bottom: 0.35em;
+  }
+}
+
+/* ---- Feature split (the "one bad row" moment) ---------------------------- */
+.split {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 40px;
+  align-items: center;
+}
+.split--form {
+  gap: 40px;
+  align-items: start;
+}
+/* On small screens the argument is read before the illustration. */
+.split--held > :first-child {
+  order: 2;
+}
+.split--held > :last-child {
+  order: 1;
+}
+@media (min-width: 900px) {
+  .split {
+    grid-template-columns: 1fr 1fr;
+    gap: clamp(36px, 4vw, 88px);
+  }
+  .split--form {
+    grid-template-columns: 1.05fr 0.95fr;
+  }
+  .split--held > :first-child,
+  .split--held > :last-child {
+    order: 0;
+  }
+}
+
+.batch {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: clamp(14px, 0.5rem + 1vw, 22px);
+}
+.batch__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding-bottom: 16px;
+  margin-bottom: 6px;
+  border-bottom: 1px solid var(--line);
+  font-family: var(--font-mono);
+  font-size: var(--fs-micro);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto auto;
+  align-items: center;
+  column-gap: clamp(8px, 2vw, 14px);
+  padding: clamp(11px, 0.4rem + 0.4vw, 13px) clamp(8px, 0.2rem + 0.6vw, 12px);
+  border-radius: 11px;
+  transition: background-color 0.2s ease;
+}
+.row__who {
+  display: flex;
+  align-items: center;
+  gap: clamp(8px, 2vw, 12px);
+  min-width: 0;
+}
+.row__dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  background: var(--teal-light);
+  flex: none;
+}
+.row__name {
+  font-size: var(--fs-body);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.row__amt {
+  font-family: var(--font-serif);
+  font-variant-numeric: tabular-nums lining-nums;
+  font-size: clamp(1rem, 0.95rem + 0.16vw, 1.25rem);
+  color: var(--ink);
+  flex: none;
+  white-space: nowrap;
+}
+.row__tag {
+  font-family: var(--font-mono);
+  font-size: clamp(0.594rem, 0.56rem + 0.14vw, 0.719rem);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--teal-text);
+  min-width: 48px;
+  text-align: right;
+}
+.row--held {
+  background: rgba(244, 169, 80, 0.11);
+  outline: 1px solid rgba(244, 169, 80, 0.42);
+}
+.row--held .row__dot {
+  background: var(--clay);
+}
+.row--held .row__tag {
+  color: var(--clay-text);
+}
+.batch__foot {
+  margin-top: 14px;
+  padding-top: 14px;
+  border-top: 1px dashed var(--line-soft);
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 12px;
+  font-size: clamp(0.75rem, 0.72rem + 0.12vw, 0.875rem);
+  color: var(--muted);
+}
+.batch__total {
+  font-family: var(--font-serif);
+  font-size: clamp(1.25rem, 1.1rem + 0.5vw, 1.75rem);
+  color: var(--ink);
+  white-space: nowrap;
+}
+@media (min-width: 1920px) {
+  /* past ~700px wide the illustration starts reading as a real data
+     grid rather than a diagram */
+  .batch {
+    max-width: 620px;
+    margin-inline: auto;
+  }
+}
+.batch__cap {
+  margin-top: 14px;
+  font-size: var(--fs-body);
+  line-height: 1.55;
+  color: var(--muted);
+  max-width: 52ch;
+}
+
+.checklist {
+  margin-top: 26px;
+  display: grid;
+  gap: 14px;
+}
+.checklist li {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  font-size: var(--fs-body);
+  line-height: 1.58;
+  color: var(--muted);
+}
+.checklist svg {
+  flex: none;
+  margin-top: 4px;
+  color: var(--clay-text);
+}
+.checklist strong {
+  color: var(--ink);
+  font-weight: 600;
+}
+
+/* ---- Product moments (hand-built, not screenshots) ----------------------- */
+.moment {
+  margin-top: var(--space-head);
+  max-width: 620px;
+  margin-inline: auto;
+}
+.moment__cap {
+  margin-top: 14px;
+  font-size: var(--fs-body);
+  line-height: 1.6;
+  color: var(--muted);
+  text-align: center;
+}
+.emp {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  padding: 16px 12px 18px;
+}
+.emp__name {
+  font-size: var(--fs-h3);
+  font-weight: 600;
+  letter-spacing: -0.012em;
+}
+.emp__label {
+  font-family: var(--font-mono);
+  font-size: var(--fs-micro);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-top: 4px;
+}
+.emp__amt {
+  font-size: clamp(1.75rem, 1.5rem + 1vw, 2.5rem);
+  line-height: 1;
+}
+
+/* Twelve months of record, accumulating along a baseline. */
+.ledger {
+  margin-bottom: var(--space-head);
+}
+.ledger__bars {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  gap: clamp(4px, 0.8vw, 12px);
+  align-items: end;
+  padding-bottom: 10px;
+  border-bottom: 1px solid rgba(253, 247, 237, 0.28);
+}
+.ledger__bar {
+  display: block;
+  width: 100%;
+  max-width: 34px;
+  margin-inline: auto;
+  height: clamp(38px, 5.5vw, 92px);
+  border-radius: 3px 3px 0 0;
+  background: linear-gradient(180deg, rgba(244, 169, 80, 0.78) 0%, rgba(244, 169, 80, 0.18) 100%);
+}
+.ledger__months {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  gap: clamp(4px, 0.8vw, 12px);
+  margin-top: 8px;
+  font-family: var(--font-mono);
+  font-size: clamp(0.5rem, 0.4rem + 0.3vw, 0.75rem);
+  letter-spacing: 0.04em;
+  text-align: center;
+  color: rgba(253, 247, 237, 0.82);
+}
+.ledger__cap {
+  margin-top: 16px;
+  font-size: var(--fs-body);
+  line-height: 1.6;
+  color: rgba(253, 247, 237, 0.86);
+  max-width: 62ch;
+}
+
+/* ---- Dark panel ---------------------------------------------------------- */
+.panel-dark {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  color: #fdf7ed;
+  background: linear-gradient(135deg, #0f4c5c 0%, #155566 52%, #0f4c5c 100%);
+}
+.panel-dark > * {
+  position: relative;
+  z-index: 1;
+}
+.panel-dark .h2,
+.panel-dark .h3 {
+  color: #fdf7ed;
+}
+.panel-dark .lede {
+  color: rgba(253, 247, 237, 0.86);
+}
+.panel-dark .card p {
+  color: rgba(253, 247, 237, 0.86);
+}
+.panel-dark .card {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(253, 247, 237, 0.14);
+}
+/* Sand rather than clay, and typed to out-specify `.panel-dark .card p`,
+   which the numeral is also matched by. Clay on the dark card measured
+   2.80:1; this holds the warm accent and clears AA. */
+.panel-dark .card p.card__num {
+  color: #fae7c6;
+}
+.panel-dark .form-note {
+  color: rgba(253, 247, 237, 0.86);
+  max-width: 68ch;
+  margin-top: 28px;
+}
+
+/* ---- Roles --------------------------------------------------------------- */
+.role {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+.role__tag {
+  font-family: var(--font-mono);
+  font-size: var(--fs-micro);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 16px;
+}
+.role ul {
+  margin-top: 18px;
+  display: grid;
+  gap: 10px;
+}
+.role li {
+  position: relative;
+  padding-left: 18px;
+  font-size: var(--fs-body);
+  line-height: 1.55;
+  color: var(--muted);
+}
+.role li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.55em;
+  width: 6px;
+  height: 6px;
+  border-radius: 999px;
+  background: var(--clay);
+}
+@media (min-width: 600px) and (max-width: 899px) {
+  .role {
+    display: grid;
+    grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+    /* the 1fr row soaks up the height the list adds, so the heading stays
+       tucked under its tag instead of drifting down the card */
+    grid-template-rows: auto 1fr;
+    column-gap: clamp(20px, 4vw, 48px);
+    align-items: start;
+  }
+  .role__tag {
+    grid-column: 1;
+    grid-row: 1;
+  }
+  .role .h3 {
+    grid-column: 1;
+    grid-row: 2;
+  }
+  .role ul {
+    grid-column: 2;
+    grid-row: 1 / span 2;
+    margin-top: 0;
+  }
+}
+
+/* ---- Honest-status list -------------------------------------------------- */
+.status {
+  display: grid;
+  gap: 2px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  overflow: hidden;
+  background: var(--line);
+}
+.status__row {
+  background: var(--card);
+  padding: clamp(18px, 1rem + 0.6vw, 24px) clamp(18px, 1rem + 0.9vw, 30px);
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 10px;
+  align-items: start;
+}
+.status__label {
+  justify-self: start;
+  font-family: var(--font-mono);
+  font-size: var(--fs-micro);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  border: 1px solid currentColor;
+  border-radius: 999px;
+  padding: 4px 10px;
+}
+.status__label--live {
+  color: var(--teal-text);
+}
+.status__label--soon {
+  color: var(--clay-text);
+}
+.status__label--note {
+  color: var(--muted);
+}
+.status__row p {
+  font-size: var(--fs-body);
+  line-height: 1.6;
+  color: var(--muted);
+  max-width: 78ch;
+}
+.status__row strong {
+  color: var(--ink);
+  font-weight: 600;
+}
+@media (min-width: 640px) {
+  .status__row {
+    grid-template-columns: clamp(112px, 12vw, 190px) 1fr;
+    gap: clamp(18px, 2vw, 28px);
+  }
+  .status__label {
+    border: 0;
+    padding: 3px 0 0;
+  }
+}
+
+/* ---- Form ---------------------------------------------------------------- */
+.form-card {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: clamp(22px, 1rem + 2vw, 44px);
+}
+@media (min-width: 1920px) {
+  .form-card {
+    max-width: 720px;
+  }
+}
+.field {
+  display: grid;
+  gap: 7px;
+  margin-bottom: 16px;
+}
+.field label {
+  font-size: clamp(0.781rem, 0.75rem + 0.1vw, 0.875rem);
+  font-weight: 500;
+  color: var(--ink);
+}
+.field__opt {
+  color: var(--muted);
+  font-weight: 400;
+}
+/* Instructions live here, not in a placeholder — placeholder text
+   disappears the moment someone starts answering. */
+.field__hint {
+  margin: -2px 0 2px;
+  font-size: var(--fs-micro);
+  line-height: 1.5;
+  color: var(--muted);
+}
+.field input,
+.field select,
+.field textarea {
+  width: 100%;
+  border: 1px solid var(--line-soft);
+  border-radius: var(--radius-sm);
+  padding: 12px 15px;
+  /* never below 16px: iOS Safari zooms the whole viewport on focus */
+  font-size: max(16px, var(--fs-body));
+  background: #fff;
+  transition: border-color 0.18s ease, box-shadow 0.18s ease;
+}
+
+/* The native select arrow sits hard against the right edge, which reads as
+   lopsided beside the 15px the text is inset on the left. Draw our own and
+   inset it by that same 15px so both sides of the control match. */
+.field select {
+  appearance: none;
+  -webkit-appearance: none;
+  background: #fff
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236b6157' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E")
+    no-repeat right 15px center;
+  background-size: 12px 12px;
+  /* 15 inset + 12 glyph + 11 clear, so a long option never runs under it */
+  padding-right: 38px;
+}
+
+/* opacity: 1 is required — Firefox applies its own placeholder opacity
+   on top of the colour, which would drag the ratio back below AA. */
+.field input::placeholder,
+.field textarea::placeholder {
+  color: var(--placeholder);
+  opacity: 1;
+}
+.field input:focus,
+.field select:focus,
+.field textarea:focus {
+  border-color: var(--clay);
+  box-shadow: 0 0 0 3px rgba(244, 169, 80, 0.22);
+}
+.field input:focus:not(:focus-visible),
+.field select:focus:not(:focus-visible),
+.field textarea:focus:not(:focus-visible) {
+  outline: none;
+}
+.field textarea {
+  min-height: 96px;
+  resize: vertical;
+}
+.field-row {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+}
+@media (min-width: 560px) {
+  .field-row {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+.form-note {
+  margin-top: 14px;
+  font-size: clamp(0.75rem, 0.72rem + 0.12vw, 0.875rem);
+  line-height: 1.55;
+  color: var(--muted);
+}
+/* The honeypot. Positioned off-screen rather than display:none — a field
+   that is not rendered at all is the first thing a bot learns to skip — and
+   kept out of the tab order and the accessibility tree in the markup, so no
+   keyboard, screen reader or autofill ever reaches it. */
+.hp {
+  position: absolute;
+  left: -9999px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
+/* Empty by default and costing no space, but always rendered, so the
+   aria-live region is in the accessibility tree before the first message is
+   written into it. A region that starts at display:none does not reliably
+   announce the update that reveals it. The box and the spacing therefore
+   belong to the state classes, not to the base. */
+.form-status {
+  margin: 0;
+  padding: 0;
+  border-radius: var(--radius-sm);
+  font-size: clamp(0.844rem, 0.8rem + 0.14vw, 0.938rem);
+}
+.form-status.is-ok,
+.form-status.is-err {
+  margin-top: 16px;
+  padding: 12px 16px;
+}
+.form-status.is-ok {
+  background: rgba(15, 155, 142, 0.1);
+  border: 1px solid rgba(15, 155, 142, 0.32);
+  color: var(--teal-text);
+}
+.form-status.is-err {
+  background: rgba(199, 91, 57, 0.1);
+  border: 1px solid rgba(199, 91, 57, 0.3);
+  color: var(--clay-text);
+}
+.form-aside li {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  font-size: var(--fs-body);
+  line-height: 1.58;
+  color: var(--muted);
+  margin-bottom: 14px;
+}
+.form-aside svg {
+  flex: none;
+  margin-top: 4px;
+  color: var(--clay-text);
+}
+
+/* ---- Footer -------------------------------------------------------------- */
+.footer {
+  border-top: 1px solid var(--line);
+  padding: clamp(40px, 2rem + 1.5vw, 64px) 0 clamp(32px, 1.5rem + 1vw, 48px);
+}
+.footer__top {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  align-items: flex-start;
+}
+.footer__tag {
+  margin-top: 12px;
+  font-size: var(--fs-body);
+  color: var(--muted);
+  max-width: 42ch;
+}
+.footer__links {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 2px 24px;
+  width: 100%;
+  font-size: var(--fs-body);
+  color: var(--muted);
+}
+.footer__links a {
+  display: flex;
+  align-items: center;
+  min-height: 44px;
+}
+.footer__links a:hover {
+  color: var(--ink);
+}
+.footer__legal {
+  margin-top: 34px;
+  font-size: clamp(0.781rem, 0.74rem + 0.14vw, 0.875rem);
+  line-height: 1.6;
+  color: var(--muted);
+  max-width: 76ch;
+}
+.footer__bottom {
+  margin-top: 40px;
+  padding-top: 22px;
+  border-top: 1px dashed var(--line-soft);
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  font-family: var(--font-mono);
+  font-size: var(--fs-micro);
+  letter-spacing: 0.1em;
+  color: var(--muted);
+}
+@media (min-width: 760px) {
+  .footer__top {
+    flex-direction: row;
+    justify-content: space-between;
+    gap: 32px;
+  }
+  .footer__links {
+    display: flex;
+    gap: clamp(18px, 2vw, 28px);
+    flex-wrap: wrap;
+    width: auto;
+  }
+  .footer__links a {
+    min-height: 0;
+  }
+}
+
+/* ============================================================
+   Motion system — same class names and curves as the app
+   ============================================================ */
+
+/* Scroll reveal. The hidden state is scoped to .pm-js, which the head
+   script sets and removes again if site.js never signals it is running,
+   so a script failure can never leave the page blank. */
+.pm-js .pm-reveal {
+  opacity: 0;
+  transform: translateY(18px);
+  will-change: opacity, transform;
+}
+.pm-js .pm-reveal.pm-in {
+  opacity: 1;
+  transform: none;
+  transition: opacity 0.6s cubic-bezier(0.2, 0.9, 0.25, 1.1),
+    transform 0.6s cubic-bezier(0.2, 0.9, 0.25, 1.1);
+}
+.pm-js .pm-stagger > * {
+  opacity: 0;
+  transform: translateY(16px);
+}
+.pm-js .pm-stagger.pm-in > * {
+  opacity: 1;
+  transform: none;
+  transition: opacity 0.55s cubic-bezier(0.2, 0.9, 0.25, 1.1),
+    transform 0.55s cubic-bezier(0.2, 0.9, 0.25, 1.1);
+  transition-delay: calc(var(--pm-i, 0) * 60ms);
+}
+
+/* Logo build — each SVG piece drops and bounces into place */
+@keyframes pmLogoDrop {
+  0% {
+    opacity: 0;
+    transform: translateY(-46px) rotate(-8deg);
+  }
+  12% {
+    opacity: 1;
+  }
+  60% {
+    transform: translateY(0) rotate(0);
+  }
+  74% {
+    transform: translateY(-6px);
+  }
+  86% {
+    transform: translateY(0);
+  }
+  94% {
+    transform: translateY(-2px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.pm-logo-piece {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: pmLogoDrop 1s cubic-bezier(0.34, 0.66, 0.4, 1) both;
+}
+
+/* Wordmark letters rise in */
+@keyframes pmRise {
+  from {
+    opacity: 0;
+    transform: translateY(28px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.pm-letter {
+  display: inline-block;
+  animation: pmRise 0.56s cubic-bezier(0.2, 0.9, 0.25, 1.15) both;
+}
+
+/* Hand-drawn scribble underline draws itself */
+.pm-scribble {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  animation: pmDraw 0.72s ease 0.1s forwards;
+}
+@keyframes pmDraw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+/* Gentle pulse for the "live" dots */
+@keyframes pmPulse {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgba(244, 169, 80, 0.5);
+  }
+  50% {
+    box-shadow: 0 0 0 5px rgba(244, 169, 80, 0);
+  }
+}
+.pm-pulse {
+  animation: pmPulse 2s ease-out infinite;
+}
+
+/* The brand gradient, gently in motion */
+@keyframes pmGradientShift {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+.pm-gradient-move {
+  background-size: 200% 200% !important;
+  animation: pmGradientShift 9s ease-in-out infinite;
+}
+
+/* Clickable affordances — no shadows, just lift and warmth */
+.pm-lift {
+  transition: transform 0.18s cubic-bezier(0.2, 0.9, 0.25, 1.1), border-color 0.18s ease,
+    background-color 0.18s ease;
+}
+.pm-lift:hover {
+  transform: translateY(-2px);
+  border-color: rgba(244, 169, 80, 0.55);
+}
+.pm-press {
+  transition: transform 0.14s cubic-bezier(0.2, 0.9, 0.25, 1.1), filter 0.14s ease,
+    opacity 0.14s ease, background-color 0.18s ease, border-color 0.18s ease, color 0.18s ease;
+}
+.pm-press:hover {
+  filter: brightness(1.04);
+}
+.pm-press:active {
+  transform: scale(0.97);
+}
+
+/* ---- The held row, told as a sequence ------------------------------------
+   Rows settle in order, then one is pulled out and held while the rest
+   stay settled. Fail-open: without .is-playing every row is already in
+   its final state. */
+@keyframes pmRowIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes pmHold {
+  0% {
+    background-color: transparent;
+    outline-color: transparent;
+    transform: none;
+  }
+  55% {
+    background-color: rgba(244, 169, 80, 0.14);
+    outline-color: rgba(244, 169, 80, 0.5);
+    transform: translateX(5px);
+  }
+  100% {
+    background-color: rgba(244, 169, 80, 0.11);
+    outline-color: rgba(244, 169, 80, 0.42);
+    transform: none;
+  }
+}
+@keyframes pmFadeOut {
+  to {
+    opacity: 0;
+  }
+}
+@keyframes pmFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes pmDotWarm {
+  to {
+    background-color: var(--clay);
+  }
+}
+.batch.is-playing .row {
+  animation: pmRowIn 420ms cubic-bezier(0.2, 0.9, 0.25, 1.1) both;
+  animation-delay: calc(var(--pm-i, 0) * 90ms);
+}
+.batch.is-playing .row--held {
+  animation: pmRowIn 420ms cubic-bezier(0.2, 0.9, 0.25, 1.1) calc(var(--pm-i, 0) * 90ms) both,
+    pmHold 520ms cubic-bezier(0.2, 0.9, 0.25, 1.1) 900ms both;
+}
+.row__tag--swap {
+  display: inline-grid;
+  justify-items: end;
+}
+.row__tag--swap > * {
+  grid-area: 1 / 1;
+}
+.row__tag-b {
+  opacity: 0;
+  color: var(--clay-text);
+}
+.batch.is-playing .row__tag-a {
+  animation: pmFadeOut 240ms ease 960ms both;
+}
+.batch.is-playing .row__tag-b {
+  animation: pmFadeIn 240ms ease 1040ms both;
+}
+.batch.is-playing .row--held .row__dot {
+  animation: pmDotWarm 300ms ease 960ms both;
+}
+/* Without the sequence the held row is simply already held. */
+.batch:not(.is-playing) .row__tag-a {
+  opacity: 0;
+}
+.batch:not(.is-playing) .row__tag-b {
+  opacity: 1;
+}
+
+/* ---- Scroll cue — bobs three times, then stops --------------------------- */
+@keyframes pmCue {
+  0%,
+  60%,
+  100% {
+    transform: none;
+  }
+  75% {
+    transform: translateY(5px);
+  }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .section-lead__cue {
+    animation: pmCue 1.6s cubic-bezier(0.2, 0.9, 0.25, 1.1) 3 both;
+  }
+}
+
+/* ---- Veil parallax on the dark panels ------------------------------------
+   Only the two warm blobs drift; the content never moves. Where
+   scroll-driven animation is unsupported the ::before never applies and
+   the panels look exactly as they did. */
+@keyframes pmVeil {
+  from {
+    transform: translate3d(0, -4.5%, 0);
+  }
+  to {
+    transform: translate3d(0, 4.5%, 0);
+  }
+}
+.hero::before,
+.panel-dark::before {
+  content: "";
+  position: absolute;
+  inset: -14% -6%;
+  z-index: 0;
+  pointer-events: none;
+}
+/* The clay layer is capped at 0.18: it is the light blob, and text sitting
+   on its core is where contrast bottoms out. The copper layers are dark
+   enough not to cost anything and are left alone. */
+.hero::before {
+  background: radial-gradient(ellipse at 18% 20%, rgba(244, 169, 80, 0.18) 0%, transparent 46%),
+    radial-gradient(ellipse at 84% 80%, rgba(199, 91, 57, 0.18) 0%, transparent 44%);
+}
+.panel-dark::before {
+  background: radial-gradient(ellipse at 80% 15%, rgba(244, 169, 80, 0.18) 0%, transparent 48%),
+    radial-gradient(ellipse at 10% 88%, rgba(199, 91, 57, 0.16) 0%, transparent 46%);
+}
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .hero::before,
+    .panel-dark::before {
+      animation: pmVeil linear both;
+      animation-timeline: view();
+      animation-range: entry 0% exit 100%;
+    }
+  }
+}
+
+/* ---- Reduced motion ------------------------------------------------------ */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  .pm-js .pm-reveal,
+  .pm-js .pm-stagger > *,
+  .pm-logo-piece,
+  .pm-letter,
+  .pm-gradient-move,
+  .pm-pulse,
+  .batch.is-playing .row,
+  .batch.is-playing .row--held,
+  .batch.is-playing .row--held .row__dot,
+  .batch .row__tag-a,
+  .batch .row__tag-b,
+  .section-lead__cue {
+    animation: none !important;
+    transition: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+  /* the held row keeps its final look, so the story still reads */
+  .batch .row--held {
+    background: rgba(244, 169, 80, 0.11);
+    outline: 1px solid rgba(244, 169, 80, 0.42);
+  }
+  .batch .row--held .row__dot {
+    background: var(--clay);
+  }
+  .batch .row__tag-a {
+    display: none;
+  }
+  .pm-scribble {
+    stroke-dashoffset: 0 !important;
+    animation: none !important;
+  }
+}
