@@ -1,0 +1,844 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Payramid — Payroll that pays you back</title>
+    <meta
+      name="description"
+      content="Payramid turns your monthly payroll run into a permanent, verifiable record. One bad row never stops the rest of the run, employees see every payment they have ever received, and the history you build belongs to your business."
+    />
+    <link rel="canonical" href="https://payramid.github.io/" />
+    <meta name="theme-color" content="#0F4C5C" />
+    <meta name="referrer" content="strict-origin-when-cross-origin" />
+
+    <!-- Social -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Payramid" />
+    <meta property="og:title" content="Payramid — Payroll that pays you back" />
+    <meta
+      property="og:description"
+      content="Every business runs payroll. Almost none get anything back from it. Payramid turns each monthly run into a permanent, verifiable record."
+    />
+    <meta property="og:url" content="https://payramid.github.io/" />
+    <meta property="og:image" content="https://payramid.github.io/assets/og.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Payramid — Payroll that pays you back" />
+    <meta
+      name="twitter:description"
+      content="Every business runs payroll. Almost none get anything back from it. Payramid turns each monthly run into a permanent, verifiable record."
+    />
+    <meta name="twitter:image" content="https://payramid.github.io/assets/og.png" />
+
+    <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg" />
+    <link rel="apple-touch-icon" href="/assets/favicon.svg" />
+
+    <!-- Only the weights the stylesheet actually asks for: Cinzel 700,
+         Geist 400/500/600/700, Geist Mono 400, Instrument Serif upright +
+         italic. Anything added to styles.css must be added here too or it
+         falls back to the system stack. -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="preload"
+      as="style"
+      href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400&family=Instrument+Serif:ital@0;1&display=swap"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400&family=Instrument+Serif:ital@0;1&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/assets/styles.css?v=3" />
+
+    <!-- Arms the scroll-reveal hidden state before first paint. If site.js
+         never signals that it is running, this takes the class off again so
+         no section can ever be left invisible. -->
+    <script>
+      (function (d) {
+        var r = d.documentElement;
+        r.className += (r.className ? " " : "") + "pm-js";
+        setTimeout(function () {
+          if (r.className.indexOf("pm-ready") === -1) {
+            r.className = r.className.replace(/(^|\s)pm-js(\s|$)/, "$1");
+          }
+        }, 2000);
+      })(document);
+    </script>
+
+    <!-- Microsoft Clarity — impressions, unique visitors, scroll depth, heatmaps -->
+    <script type="text/javascript">
+      (function (c, l, a, r, i, t, y) {
+        c[a] =
+          c[a] ||
+          function () {
+            (c[a].q = c[a].q || []).push(arguments);
+          };
+        t = l.createElement(r);
+        t.async = 1;
+        t.src = "https://www.clarity.ms/tag/" + i;
+        y = l.getElementsByTagName(r)[0];
+        y.parentNode.insertBefore(t, y);
+      })(window, document, "clarity", "script", "was4x3fm8x");
+    </script>
+
+    <!-- Organization only. Name, URL, logo, description — nothing else.
+         No founding date, no headcount, no ratings, no offers: every field
+         here has to be something we can stand behind in public. -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        "name": "Payramid",
+        "url": "https://payramid.github.io/",
+        "logo": "https://payramid.github.io/assets/og.png",
+        "description": "Payramid turns a company's monthly payroll run into a permanent, verifiable record. One bad row never stops the rest of the run, and employees can see every payment they have ever received."
+      }
+    </script>
+  </head>
+
+  <body>
+    <a class="skip-link" href="#top">Skip to content</a>
+
+    <!-- ══ Nav ══════════════════════════════════════════════════════════════ -->
+    <header class="nav" id="nav">
+      <div class="wrap nav__inner">
+        <a class="brand" href="#top" aria-label="Payramid — home">
+          <svg width="30" height="30" viewBox="0 0 64 64" fill="none" aria-hidden="true">
+            <defs>
+              <linearGradient id="navG" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stop-color="#0F9B8E" /><stop offset="100%" stop-color="#0F4C5C" />
+              </linearGradient>
+              <linearGradient id="navB" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stop-color="#2C6E93" /><stop offset="100%" stop-color="#1A3F5C" />
+              </linearGradient>
+            </defs>
+            <polygon points="32,8 10,52 40,38" fill="url(#navG)" />
+            <polygon points="32,8 54,52 40,38" fill="url(#navB)" />
+            <polygon points="10,52 54,52 40,38" fill="#1A3F5C" opacity="0.85" />
+            <polygon points="16,42 46,28 44,26 14,40" fill="white" opacity="0.7" />
+            <circle cx="48" cy="10" r="2.5" fill="#0F9B8E" />
+            <circle cx="52" cy="14" r="2.5" fill="#2C6E93" />
+            <circle cx="54" cy="20" r="2.5" fill="#0F9B8E" />
+          </svg>
+          <span class="brand__word">PAYRAMID</span>
+        </a>
+
+        <!-- Two copies of the section links: the inline rail from 900px up,
+             and the disclosure below it. Exactly one is ever displayed, so
+             only one is ever in the accessibility tree. Keep them in sync. -->
+        <nav class="nav__links" aria-label="Primary">
+          <a href="#problem">The problem</a>
+          <a href="#how">What it does</a>
+          <a href="#record">The longer game</a>
+          <a href="#status">Where we are</a>
+        </nav>
+
+        <div class="nav__cta">
+          <a class="btn btn--primary btn--sm pm-press" href="#pilot">Request a pilot</a>
+
+          <details class="nav__menu" id="nav-menu">
+            <summary class="nav__menu-btn">
+              <span class="nav__bars" aria-hidden="true"><i></i><i></i></span>
+              <span class="nav__menu-label">Menu</span>
+            </summary>
+            <nav class="nav__panel" aria-label="Primary">
+              <a href="#problem">The problem</a>
+              <a href="#how">What it does</a>
+              <a href="#record">The longer game</a>
+              <a href="#status">Where we are</a>
+            </nav>
+          </details>
+        </div>
+      </div>
+    </header>
+
+    <main id="top">
+      <!-- ══ Hero ═══════════════════════════════════════════════════════════ -->
+      <section class="hero pm-gradient-move">
+        <div class="wrap">
+          <div class="hero__inner">
+            <div>
+              <p class="kicker kicker--light">Payroll infrastructure · Egypt</p>
+              <h1>Payroll that pays&nbsp;you <span class="em-serif">back.</span></h1>
+              <!-- Two versions of the same claim: the short one on phones,
+                   the full one from 700px up. Edit both together. -->
+              <p class="hero__sub">
+                Every business in Egypt runs payroll. Almost none get anything back from it.
+                <span class="u-sm">Payramid turns each monthly run into a permanent, verifiable record.</span>
+                <span class="u-lg">Payramid turns each monthly run into a permanent, verifiable record — so one bad row
+                never stops everyone else, employees see every payment they have ever received, and
+                the history you build actually counts for something.</span>
+              </p>
+              <div class="btn-row">
+                <a class="btn btn--primary pm-press" href="#pilot">
+                  Request a pilot
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7" /></svg>
+                </a>
+                <a class="btn btn--ghost-light pm-press" href="#how">See how it works</a>
+              </div>
+
+              <div class="pipeline">
+                <div class="pipeline__item"><span class="pipeline__k">01</span><span class="pipeline__v">Approved</span></div>
+                <div class="pipeline__item"><span class="pipeline__k">02</span><span class="pipeline__v">Permanently recorded</span></div>
+                <div class="pipeline__item"><span class="pipeline__k">03</span><span class="pipeline__v">Visible to the employee</span></div>
+              </div>
+            </div>
+
+            <!-- brand build: the logo assembles, PAYRAMID rises, scribble draws -->
+            <div class="hero__build">
+              <div class="pyramid-build">
+                <svg width="150" height="150" viewBox="0 0 64 64" fill="none" aria-hidden="true">
+                  <defs>
+                    <linearGradient id="pyG-anim" x1="0" y1="0" x2="1" y2="1">
+                      <stop offset="0%" stop-color="#0F9B8E" /><stop offset="100%" stop-color="#0F4C5C" />
+                    </linearGradient>
+                    <linearGradient id="pyB-anim" x1="0" y1="0" x2="1" y2="1">
+                      <stop offset="0%" stop-color="#2C6E93" /><stop offset="100%" stop-color="#1A3F5C" />
+                    </linearGradient>
+                  </defs>
+                  <polygon class="pm-logo-piece" style="animation-delay: 140ms" points="32,8 10,52 40,38" fill="url(#pyG-anim)" />
+                  <polygon class="pm-logo-piece" style="animation-delay: 250ms" points="32,8 54,52 40,38" fill="url(#pyB-anim)" />
+                  <polygon class="pm-logo-piece" style="animation-delay: 0ms" points="10,52 54,52 40,38" fill="#1A3F5C" opacity="0.85" />
+                  <polygon class="pm-logo-piece" style="animation-delay: 380ms" points="16,42 46,28 44,26 14,40" fill="white" opacity="0.7" />
+                  <line class="pm-logo-piece" style="animation-delay: 500ms" x1="40" y1="18" x2="48" y2="10" stroke="#0F9B8E" stroke-width="1.5" />
+                  <line class="pm-logo-piece" style="animation-delay: 560ms" x1="42" y1="22" x2="52" y2="14" stroke="#0F9B8E" stroke-width="1.5" />
+                  <line class="pm-logo-piece" style="animation-delay: 620ms" x1="44" y1="26" x2="54" y2="20" stroke="#0F9B8E" stroke-width="1.5" />
+                  <circle class="pm-logo-piece" style="animation-delay: 700ms" cx="48" cy="10" r="2.5" fill="#0F9B8E" />
+                  <circle class="pm-logo-piece" style="animation-delay: 760ms" cx="52" cy="14" r="2.5" fill="#2C6E93" />
+                  <circle class="pm-logo-piece" style="animation-delay: 820ms" cx="54" cy="20" r="2.5" fill="#0F9B8E" />
+                </svg>
+
+                <div>
+                  <div class="pyramid-build__word" aria-label="Payramid">
+                    <span class="pm-letter" style="animation-delay: 1000ms" aria-hidden="true">P</span>
+                    <span class="pm-letter" style="animation-delay: 1070ms" aria-hidden="true">A</span>
+                    <span class="pm-letter" style="animation-delay: 1140ms" aria-hidden="true">Y</span>
+                    <span class="pm-letter" style="animation-delay: 1210ms" aria-hidden="true">R</span>
+                    <span class="pm-letter" style="animation-delay: 1280ms" aria-hidden="true">A</span>
+                    <span class="pm-letter" style="animation-delay: 1350ms" aria-hidden="true">M</span>
+                    <span class="pm-letter" style="animation-delay: 1420ms" aria-hidden="true">I</span>
+                    <span class="pm-letter" style="animation-delay: 1490ms" aria-hidden="true">D</span>
+                  </div>
+                  <svg class="pm-rule" width="232" height="20" viewBox="0 0 300 20" fill="none" aria-hidden="true">
+                    <path class="pm-scribble" pathLength="1" style="animation-delay: 1680ms"
+                      d="M6 12 C 56 3, 104 19, 152 9 S 250 3, 294 11"
+                      stroke="#F4D6A0" stroke-width="4" stroke-linecap="round" />
+                  </svg>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="hero__foot">
+            <span>PAYRAMID · PILOT PROGRAMME</span>
+            <span>SALARY, SETTLED.</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- ══ Problem ════════════════════════════════════════════════════════ -->
+      <section class="section section--lead" id="problem">
+        <div class="wrap">
+          <!-- The band that is always left showing under the hero: a rule,
+               the label, and a cue. Fixed height, so the headline below it
+               is never sliced by the fold at any viewport height. -->
+          <div class="section-lead">
+            <p class="kicker">The problem</p>
+            <span class="section-lead__cue" aria-hidden="true">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6" /></svg>
+            </span>
+          </div>
+
+          <div class="section-head pm-reveal">
+            <h2 class="h2">
+              Payroll is the most reliable thing your business does.
+              <span class="em-serif">And the least useful.</span>
+            </h2>
+            <p class="lede">
+              Every month, on time, without fail — and at the end of it you have a bank
+              confirmation, a spreadsheet, and nothing anyone outside your company can check.
+            </p>
+          </div>
+
+          <div class="grid grid--3 pm-stagger">
+            <article class="card card--problem" style="--pm-i: 0">
+              <p class="card__num">01</p>
+              <h3 class="h3">One bad row stops everyone.</h3>
+              <p>
+                A wrong account number, a closed account, a new joiner who isn't set up yet — and
+                the whole run bounces. Everybody waits, and finance spends the day on the phone.
+              </p>
+            </article>
+            <article class="card card--problem" style="--pm-i: 1">
+              <p class="card__num">02</p>
+              <h3 class="h3">The record lives in someone's inbox.</h3>
+              <p>
+                Payslips in one folder, transfer confirmations in another, corrections agreed over
+                WhatsApp. When someone asks what was actually paid in March, answering it is an
+                afternoon's work.
+              </p>
+            </article>
+            <article class="card card--problem" style="--pm-i: 2">
+              <p class="card__num">03</p>
+              <h3 class="h3">Your best track record counts for nothing.</h3>
+              <p>
+                Two years of paying eighty people on time is the clearest evidence your business is
+                sound. It just isn't evidence anyone will accept, because nothing stops the numbers
+                being edited after the fact.
+              </p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <!-- ══ What it does ═══════════════════════════════════════════════════ -->
+      <section class="section section--tint" id="how">
+        <div class="wrap">
+          <div class="section-head pm-reveal">
+            <p class="kicker">What Payramid does</p>
+            <h2 class="h2">Run payroll the way you already do. <span class="em-serif">Get back something you never had.</span></h2>
+            <p class="lede">You upload the same spreadsheet. Everything after that is different.</p>
+          </div>
+
+          <div class="grid grid--4 pm-stagger">
+            <article class="card pm-lift" style="--pm-i: 0">
+              <div class="icon-badge" aria-hidden="true">
+                <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7z"/><circle cx="12" cy="12" r="3"/></svg>
+              </div>
+              <h3 class="h3">Preview before you commit</h3>
+              <p>
+                Every row on screen before anything is submitted — who is paid, how much, and
+                anything that doesn't look right. No surprises discovered afterwards.
+              </p>
+            </article>
+
+            <article class="card pm-lift" style="--pm-i: 1">
+              <div class="icon-badge" aria-hidden="true">
+                <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 9v4M12 17h.01"/><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/></svg>
+              </div>
+              <h3 class="h3">One bad row, held alone</h3>
+              <p>
+                A payment that can't go through is set aside on its own. The rest of the run
+                continues on schedule. Nobody else waits.
+              </p>
+            </article>
+
+            <article class="card pm-lift" style="--pm-i: 2">
+              <div class="icon-badge" aria-hidden="true">
+                <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2z"/><path d="M16 6V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v1"/><path d="M17 12h2"/></svg>
+              </div>
+              <h3 class="h3">Employees see everything</h3>
+              <p>
+                Each person gets their own view of their salary and every payment they have ever
+                received — in an account that belongs to them, not to their employer.
+              </p>
+            </article>
+
+            <article class="card pm-lift" style="--pm-i: 3">
+              <div class="icon-badge" aria-hidden="true">
+                <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg>
+              </div>
+              <h3 class="h3">A record nobody can rewrite</h3>
+              <p>
+                Approvals, rejections and corrections are added to a permanent history. Nothing is
+                ever quietly edited — including by us.
+              </p>
+            </article>
+          </div>
+
+          <!-- Hand-built illustration of the employee's own view. Sample
+               names and figures — history only, no balance, no transfers. -->
+          <div class="moment pm-reveal">
+            <div class="batch">
+              <div class="batch__head">
+                <span>What an employee sees</span>
+                <span>Example</span>
+              </div>
+              <div class="emp">
+                <div>
+                  <p class="emp__name">Mariam H.</p>
+                  <p class="emp__label">Monthly salary</p>
+                </div>
+                <p class="emp__amt font-money gradient-num">18,400</p>
+              </div>
+              <div class="row">
+                <div class="row__who"><span class="row__dot"></span><span class="row__name">March 2026</span></div>
+                <span class="row__amt">18,400</span><span class="row__tag">Received</span>
+              </div>
+              <div class="row">
+                <div class="row__who"><span class="row__dot"></span><span class="row__name">February 2026</span></div>
+                <span class="row__amt">18,400</span><span class="row__tag">Received</span>
+              </div>
+              <div class="row">
+                <div class="row__who"><span class="row__dot"></span><span class="row__name">January 2026</span></div>
+                <span class="row__amt">17,900</span><span class="row__tag">Received</span>
+              </div>
+              <div class="batch__foot">
+                <span>Every payment, kept in one place</span>
+              </div>
+            </div>
+            <p class="moment__cap">
+              The same history is there whether or not the person still works for you.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ══ The difference: one bad row ════════════════════════════════════ -->
+      <section class="section" id="held">
+        <div class="wrap split split--held">
+          <div class="pm-reveal">
+            <!-- Illustration, with sample names and figures. The rows settle
+                 in order and then one is pulled out and held — the motion is
+                 the argument the section makes. -->
+            <div class="batch batch--sequence">
+              <div class="batch__head">
+                <span>March payroll · 250 payments</span>
+                <span>Example</span>
+              </div>
+              <div class="row" style="--pm-i: 0">
+                <div class="row__who"><span class="row__dot"></span><span class="row__name">Mariam H.</span></div>
+                <span class="row__amt">18,400</span><span class="row__tag">Recorded</span>
+              </div>
+              <div class="row" style="--pm-i: 1">
+                <div class="row__who"><span class="row__dot"></span><span class="row__name">Youssef A.</span></div>
+                <span class="row__amt">12,750</span><span class="row__tag">Recorded</span>
+              </div>
+              <div class="row row--held" style="--pm-i: 2">
+                <div class="row__who"><span class="row__dot pm-pulse"></span><span class="row__name">Nour E.</span></div>
+                <span class="row__amt">21,000</span>
+                <span class="row__tag row__tag--swap">
+                  <span class="row__tag-a" aria-hidden="true">Recorded</span>
+                  <span class="row__tag-b">Held</span>
+                </span>
+              </div>
+              <div class="row" style="--pm-i: 3">
+                <div class="row__who"><span class="row__dot"></span><span class="row__name">Karim S.</span></div>
+                <span class="row__amt">9,600</span><span class="row__tag">Recorded</span>
+              </div>
+              <div class="row" style="--pm-i: 4">
+                <div class="row__who"><span class="row__dot"></span><span class="row__name">Salma R.</span></div>
+                <span class="row__amt">15,250</span><span class="row__tag">Recorded</span>
+              </div>
+              <div class="batch__foot">
+                <span>249 of 250 completed · 1 awaiting review</span>
+                <span class="batch__total font-money gradient-num" data-countup="4180000" data-prefix="EGP&nbsp;">EGP&nbsp;4.18M</span>
+              </div>
+            </div>
+            <p class="batch__cap">An illustration of how a run behaves — not a customer record.</p>
+          </div>
+
+          <div class="pm-reveal">
+            <p class="kicker">The difference</p>
+            <h2 class="h2">One bad row shouldn't cost everyone <span class="em-serif">their payday.</span></h2>
+            <p class="lede">
+              Payroll goes out as a single batch of hundreds of payments. In most systems, if one
+              row is bad, the whole batch fails and nobody gets paid that day. Here, that one
+              payment is held back — and every other payment in the run still goes through.
+            </p>
+            <ul class="checklist">
+              <li>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l4 4L19 6"/></svg>
+                <span><strong>Only the affected payment stops.</strong> The rest of the run completes on schedule, untouched.</span>
+              </li>
+              <li>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l4 4L19 6"/></svg>
+                <span><strong>Somebody has to look at it.</strong> An administrator approves or rejects the held payment — and rejecting it requires a written reason.</span>
+              </li>
+              <li>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l4 4L19 6"/></svg>
+                <span><strong>The review joins the record too.</strong> Who decided, when, and why is kept permanently — so the decision itself can be checked later.</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- ══ Who it's for ═══════════════════════════════════════════════════ -->
+      <section class="section section--tint" id="who">
+        <div class="wrap">
+          <div class="section-head pm-reveal">
+            <p class="kicker">Who it's for</p>
+            <h2 class="h2">Built for everyone who <span class="em-serif">touches payroll.</span></h2>
+            <p class="lede">
+              Four defined roles. Everyone gets a view built for what they actually do — and nothing
+              beyond it. No informal tiers, no shared logins.
+            </p>
+          </div>
+
+          <div class="grid grid--3 pm-stagger">
+            <article class="card role" style="--pm-i: 0">
+              <p class="role__tag">Employees</p>
+              <h3 class="h3">Their salary, their history, their account.</h3>
+              <ul>
+                <li>Every payment they have ever received, in one place</li>
+                <li>An account they hold themselves — the keys are never ours</li>
+                <li>No paperwork to chase when they need proof of income</li>
+                <li>Nothing to install, and nothing to lose if a phone is replaced</li>
+              </ul>
+            </article>
+
+            <article class="card role" style="--pm-i: 1">
+              <p class="role__tag">HR &amp; finance</p>
+              <h3 class="h3">Run the month without holding your breath.</h3>
+              <ul>
+                <li>Upload the spreadsheet you already use</li>
+                <li>Every row previewed before anything is submitted</li>
+                <li>Track the run and report on it afterwards</li>
+                <li>Budget controls and reporting scoped to your own organisation</li>
+              </ul>
+            </article>
+
+            <article class="card role" style="--pm-i: 2">
+              <p class="role__tag">Administrators</p>
+              <h3 class="h3">Oversight that leaves a trail.</h3>
+              <ul>
+                <li>Review held payments and record the decision</li>
+                <li>Work across every organisation on the platform</li>
+                <li>New administrator accounts need a second person's sign-off</li>
+                <li>Suspend an organisation and its portal closes immediately</li>
+              </ul>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <!-- ══ The longer game ════════════════════════════════════════════════ -->
+      <section class="section panel-dark pm-gradient-move" id="record">
+        <div class="wrap">
+          <div class="section-head pm-reveal">
+            <p class="kicker kicker--light">The longer game</p>
+            <h2 class="h2">
+              Your payroll history is an asset. <span class="em-serif">Today it evaporates.</span>
+            </h2>
+            <p class="lede">
+              A lender deciding whether to finance your business wants to know one thing: does money
+              reliably go out on time? You already have that answer — twelve, twenty-four,
+              thirty-six months of it. What you don't have is a version anyone will trust, because a
+              record your own company can edit isn't evidence.
+            </p>
+            <p class="lede">
+              Payramid builds that record as a by-product of doing payroll. Automate payroll now;
+              use the verified history to help eligible businesses reach regulated financing later.
+            </p>
+          </div>
+
+          <!-- The record, as a motif: one entry a month, added simply by
+               running payroll. Illustrative — not a chart of anything. -->
+          <div class="ledger">
+            <div class="ledger__bars pm-stagger" aria-hidden="true">
+              <span class="ledger__bar" style="--pm-i: 0"></span>
+              <span class="ledger__bar" style="--pm-i: 1"></span>
+              <span class="ledger__bar" style="--pm-i: 2"></span>
+              <span class="ledger__bar" style="--pm-i: 3"></span>
+              <span class="ledger__bar" style="--pm-i: 4"></span>
+              <span class="ledger__bar" style="--pm-i: 5"></span>
+              <span class="ledger__bar" style="--pm-i: 6"></span>
+              <span class="ledger__bar" style="--pm-i: 7"></span>
+              <span class="ledger__bar" style="--pm-i: 8"></span>
+              <span class="ledger__bar" style="--pm-i: 9"></span>
+              <span class="ledger__bar" style="--pm-i: 10"></span>
+              <span class="ledger__bar" style="--pm-i: 11"></span>
+            </div>
+            <div class="ledger__months" aria-hidden="true">
+              <span>JAN</span><span>FEB</span><span>MAR</span><span>APR</span><span>MAY</span><span>JUN</span><span>JUL</span><span>AUG</span><span>SEP</span><span>OCT</span><span>NOV</span><span>DEC</span>
+            </div>
+            <p class="ledger__cap">
+              A year of payroll is a year of record. You add nothing to it by hand — every month you
+              pay people, the history gets one month longer.
+            </p>
+          </div>
+
+          <div class="grid grid--3 pm-stagger">
+            <article class="card" style="--pm-i: 0">
+              <p class="card__num">01</p>
+              <h3 class="h3">Built by doing</h3>
+              <p>You fill in nothing extra. The record is simply what running payroll already produces.</p>
+            </article>
+            <article class="card" style="--pm-i: 1">
+              <p class="card__num">02</p>
+              <h3 class="h3">Portable by design</h3>
+              <p>The history describes your business, not our software. It is yours to show to whoever needs it.</p>
+            </article>
+            <article class="card" style="--pm-i: 2">
+              <p class="card__num">03</p>
+              <h3 class="h3">Checkable by outsiders</h3>
+              <p>The whole point is that someone who has no reason to trust you can still verify it.</p>
+            </article>
+          </div>
+
+          <p class="form-note">
+            Financing is a stated direction, not a service Payramid offers today. Any lending would
+            sit with licensed partners, not with us.
+          </p>
+        </div>
+      </section>
+
+      <!-- ══ Why now ════════════════════════════════════════════════════════ -->
+      <section class="section section--tight" id="why">
+        <div class="wrap">
+          <div class="section-head pm-reveal">
+            <p class="kicker">Why now</p>
+            <h2 class="h2">Egypt first — <span class="em-serif">on purpose.</span></h2>
+          </div>
+          <div class="grid grid--3 pm-stagger">
+            <article class="card card--problem" style="--pm-i: 0">
+              <h3 class="h3">A large base of small employers</h3>
+              <p>
+                Most employers in the country are small and mid-sized businesses, running payroll by
+                hand, month after month, with no system underneath it.
+              </p>
+            </article>
+            <article class="card card--problem" style="--pm-i: 1">
+              <h3 class="h3">A national push away from cash</h3>
+              <p>
+                Moving payments out of cash is national policy — and payroll is one of the largest
+                recurring cash flows a business has.
+              </p>
+            </article>
+            <article class="card card--problem" style="--pm-i: 2">
+              <h3 class="h3">A regulator that publishes a path</h3>
+              <p>
+                There is a published fintech sandbox, which means an emerging model has somewhere to
+                be tested rather than merely argued about.
+              </p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <!-- ══ Where we are ═══════════════════════════════════════════════════ -->
+      <section class="section section--tint" id="status">
+        <div class="wrap">
+          <div class="section-head pm-reveal">
+            <p class="kicker">Where we actually are</p>
+            <h2 class="h2">We'd rather you hear this <span class="em-serif">from us.</span></h2>
+            <p class="lede">
+              Most companies at this stage leave this section out. We think the businesses we want
+              to work with would rather know exactly what is being offered.
+            </p>
+          </div>
+
+          <div class="status pm-reveal">
+            <div class="status__row">
+              <span class="status__label status__label--live">Live today</span>
+              <p>
+                <strong>The platform runs.</strong> Payroll runs are uploaded, previewed, approved
+                and permanently recorded. Employees have accounts and can see their own payment
+                history. This is working software, not a mockup.
+              </p>
+            </div>
+            <div class="status__row">
+              <span class="status__label status__label--soon">Not yet</span>
+              <p>
+                <strong>We do not move the money.</strong> Payramid records that a payment was
+                approved and owed; the transfer itself still happens on your existing rail. Moving
+                money requires a payment licence, and our route to it is a licensed partner rather
+                than becoming a payment institution ourselves.
+              </p>
+            </div>
+            <div class="status__row">
+              <span class="status__label status__label--note">In a pilot</span>
+              <p>
+                <strong>Nobody's salary depends on us.</strong> We run alongside your existing
+                process for two payroll cycles, on real data. You keep paying people exactly the way
+                you do now. At the end you have a verified record of those cycles, and we have proof
+                the model holds.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ══ Pilot ══════════════════════════════════════════════════════════ -->
+      <section class="section" id="pilot">
+        <div class="wrap">
+          <div class="section-head pm-reveal">
+            <p class="kicker">Get involved</p>
+            <h2 class="h2">We're looking for a small number of <span class="em-serif">pilot organisations.</span></h2>
+            <p class="lede">
+              Two or three businesses between 30 and 150 employees, and one licensed payment
+              partner. If either sounds like you, this form is the whole application.
+            </p>
+          </div>
+
+          <div class="split split--form">
+            <div class="form-card pm-reveal">
+              <!-- The action here is what a browser with JavaScript turned off
+                   posts to, so it has to carry the real endpoint. site.js
+                   overwrites it from FORM_ENDPOINT on load and takes over the
+                   submit — so the endpoint has to be set in BOTH places before
+                   publishing. `novalidate` is deliberately absent: without JS
+                   the browser's own validation is the only one there is, and
+                   site.js switches it off for itself so it can word the errors. -->
+              <form
+                id="pilot-form"
+                method="POST"
+                action="https://formspree.io/f/REPLACE_WITH_FORM_ID"
+              >
+                <!-- Spam control, both halves free. `_gotcha` is the form
+                     service's own honeypot; anything that fills it in is not a
+                     person. `submitted_at` is stamped on load so site.js can
+                     refuse a submission that arrived faster than a human could
+                     type one. Neither is reachable by keyboard or screen reader. -->
+                <div class="hp" aria-hidden="true">
+                  <label for="f-gotcha">Leave this field empty</label>
+                  <input id="f-gotcha" type="text" name="_gotcha" tabindex="-1" autocomplete="off" />
+                </div>
+                <input type="hidden" name="submitted_at" id="f-ts" value="" />
+                <input type="hidden" name="_subject" value="Pilot request from payramid.github.io" />
+
+                <div class="field-row">
+                  <div class="field">
+                    <label for="f-name">Your name</label>
+                    <input id="f-name" name="name" type="text" autocomplete="name" placeholder="Full name" required />
+                  </div>
+                  <div class="field">
+                    <label for="f-email">Work email</label>
+                    <input id="f-email" name="email" type="email" autocomplete="email" inputmode="email" spellcheck="false" placeholder="you@company.com" required />
+                  </div>
+                </div>
+
+                <div class="field-row">
+                  <div class="field">
+                    <label for="f-company">Company</label>
+                    <input id="f-company" name="company" type="text" autocomplete="organization" placeholder="Company name" required />
+                  </div>
+                  <div class="field">
+                    <label for="f-size">People on payroll</label>
+                    <select id="f-size" name="headcount">
+                      <option value="1-29">1 – 29</option>
+                      <option value="30-75" selected>30 – 75</option>
+                      <option value="76-150">76 – 150</option>
+                      <option value="150+">150 +</option>
+                      <option value="n/a">Not applicable</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div class="field">
+                  <label for="f-role">I'm reaching out as</label>
+                  <select id="f-role" name="reaching_out_as">
+                    <option value="pilot-sme">A business interested in running a pilot</option>
+                    <option value="payment-partner">A licensed payment provider</option>
+                    <option value="investor">An investor</option>
+                    <option value="other">Something else</option>
+                  </select>
+                </div>
+
+                <div class="field">
+                  <label for="f-msg">Anything you want us to know <span class="field__opt">(optional)</span></label>
+                  <p class="field__hint" id="f-msg-hint">
+                    How you run payroll today, what would make this worth your time, or anything you
+                    want to ask us.
+                  </p>
+                  <textarea id="f-msg" name="message" rows="4" aria-describedby="f-msg-hint"></textarea>
+                </div>
+
+                <button class="btn btn--primary pm-press" type="submit" id="f-submit" style="width: 100%">
+                  Request a pilot
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7" /></svg>
+                </button>
+
+                <!-- Kept in the layout at all times, empty and zero-height, so
+                     assistive tech has the live region already when the first
+                     message lands. A region that starts display:none does not
+                     reliably announce the update that reveals it. -->
+                <div class="form-status" id="f-status" role="status" aria-live="polite" aria-atomic="true"></div>
+
+                <p class="form-note">
+                  We use your details only to get back to you about a pilot. No newsletter, no
+                  mailing list, and we don't sell or share them. This page does measure how it is
+                  read — there's a note at the bottom about that.
+                </p>
+              </form>
+            </div>
+
+            <div class="pm-reveal">
+              <ul class="form-aside">
+                <li>
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l4 4L19 6"/></svg>
+                  <span>It runs alongside what you do now. Your current payroll process does not change during the pilot.</span>
+                </li>
+                <li>
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l4 4L19 6"/></svg>
+                  <span>Two cycles is enough for you to tell whether this is genuinely useful, and short enough to walk away from.</span>
+                </li>
+                <li>
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l4 4L19 6"/></svg>
+                  <span>At the end you have a verified record of those two cycles, whether or not you continue.</span>
+                </li>
+                <li>
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l4 4L19 6"/></svg>
+                  <span>We will tell you what Payramid cannot do before you commit to anything — the section above is the short version.</span>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- ══ Footer ═══════════════════════════════════════════════════════════ -->
+    <footer class="footer">
+      <div class="wrap">
+        <div class="footer__top">
+          <div>
+            <a class="brand" href="#top">
+              <svg width="26" height="26" viewBox="0 0 64 64" fill="none" aria-hidden="true">
+                <defs>
+                  <linearGradient id="ftG" x1="0" y1="0" x2="1" y2="1">
+                    <stop offset="0%" stop-color="#0F9B8E" /><stop offset="100%" stop-color="#0F4C5C" />
+                  </linearGradient>
+                  <linearGradient id="ftB" x1="0" y1="0" x2="1" y2="1">
+                    <stop offset="0%" stop-color="#2C6E93" /><stop offset="100%" stop-color="#1A3F5C" />
+                  </linearGradient>
+                </defs>
+                <polygon points="32,8 10,52 40,38" fill="url(#ftG)" />
+                <polygon points="32,8 54,52 40,38" fill="url(#ftB)" />
+                <polygon points="10,52 54,52 40,38" fill="#1A3F5C" opacity="0.85" />
+                <polygon points="16,42 46,28 44,26 14,40" fill="white" opacity="0.7" />
+              </svg>
+              <span class="brand__word">PAYRAMID</span>
+            </a>
+            <p class="footer__tag">
+              Payroll infrastructure for Egyptian businesses. Salary, settled.
+            </p>
+          </div>
+
+          <div class="footer__links">
+            <a href="#problem">The problem</a>
+            <a href="#how">What it does</a>
+            <a href="#record">The longer game</a>
+            <a href="#status">Where we are</a>
+            <a href="#pilot">Request a pilot</a>
+          </div>
+        </div>
+
+        <p class="footer__legal">
+          Payramid is not a bank and does not provide financial, payment or lending services. Nothing
+          on this page is an offer of financing. Any future settlement or financing would be
+          delivered through appropriately licensed partners.
+        </p>
+
+        <p class="footer__legal">
+          Privacy, plainly: this page uses Microsoft Clarity to see how it gets read — which
+          sections people reach, where they click, and anonymous replays of the visit — so that
+          measurement goes to Microsoft. Fonts load from Google, so Google sees that request too.
+          There are no advertising trackers here and nothing is sold to anyone. What you send
+          through the pilot form comes to us, delivered by a third-party form service, and is used
+          only to reply to you.
+        </p>
+
+        <div class="footer__bottom">
+          <span>© 2026 PAYRAMID · ALL RIGHTS RESERVED</span>
+          <span>SALARY, SETTLED.</span>
+        </div>
+      </div>
+    </footer>
+
+    <script src="/assets/site.js?v=3"></script>
+  </body>
+</html>
