@@ -1,0 +1,22 @@
+<svg width="64" height="64" viewBox="6 4 52 52" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="pyG" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0F9B8E" />
+      <stop offset="100%" stop-color="#0F4C5C" />
+    </linearGradient>
+    <linearGradient id="pyB" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#2C6E93" />
+      <stop offset="100%" stop-color="#1A3F5C" />
+    </linearGradient>
+  </defs>
+  <polygon points="32,8 10,52 40,38" fill="url(#pyG)" />
+  <polygon points="32,8 54,52 40,38" fill="url(#pyB)" />
+  <polygon points="10,52 54,52 40,38" fill="#1A3F5C" opacity="0.85" />
+  <polygon points="16,42 46,28 44,26 14,40" fill="white" opacity="0.7" />
+  <line x1="40" y1="18" x2="48" y2="10" stroke="#0F9B8E" stroke-width="1.5" />
+  <line x1="42" y1="22" x2="52" y2="14" stroke="#0F9B8E" stroke-width="1.5" />
+  <line x1="44" y1="26" x2="54" y2="20" stroke="#0F9B8E" stroke-width="1.5" />
+  <circle cx="48" cy="10" r="2.5" fill="#0F9B8E" />
+  <circle cx="52" cy="14" r="2.5" fill="#2C6E93" />
+  <circle cx="54" cy="20" r="2.5" fill="#0F9B8E" />
+</svg>
