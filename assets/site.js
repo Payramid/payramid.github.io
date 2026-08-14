@@ -21,7 +21,7 @@
    Until the action is replaced the form refuses to send and says so,
    rather than silently swallowing somebody's submission.
 ------------------------------------------------------------------- */
-var FALLBACK_EMAIL = "REPLACE_WITH_CONTACT_EMAIL"; /* shown only when a send fails */
+var FALLBACK_EMAIL = "nadamo.cs@gmail.com"; /* shown only when a send fails */
 
 /* Nobody fills in four fields in under three seconds. Scripts do. */
 var MIN_FILL_MS = 3000;
