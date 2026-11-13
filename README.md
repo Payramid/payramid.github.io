@@ -93,7 +93,7 @@ allows 50 a month. Worth watching that ceiling if the page ever gets picked up.
 
 **Bump the cache-buster.** Pages puts a 10-minute cache on static assets and the
 headers are not configurable, so the stylesheet and script are referenced with a
-version query — currently `styles.css?v=4` and `site.js?v=4`. Increment those in
+version query — currently `styles.css?v=5` and `site.js?v=5`. Increment those in
 **both** `index.html` and `404.html` whenever either file changes, or returning
 visitors keep the old copy for up to ten minutes and the change looks like it
 did not deploy.
