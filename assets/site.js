@@ -336,3 +336,18 @@ var MIN_FILL_MS = 3000;
       });
   });
 })();
+
+/* ---- Nav logo replays its build on hover, as the product's HoverLogo does.
+   Under reduced motion the CSS already pins the pieces, so this is a no-op. */
+(function () {
+  var brand = document.querySelector(".nav .brand");
+  if (!brand) return;
+  var pieces = brand.querySelectorAll(".pm-logo-piece");
+  var replay = function () {
+    for (var i = 0; i < pieces.length; i++) pieces[i].style.animationName = "none";
+    void brand.offsetWidth; // restart: the browser must see the animation removed
+    for (var k = 0; k < pieces.length; k++) pieces[k].style.animationName = "";
+  };
+  brand.addEventListener("mouseenter", replay);
+  brand.addEventListener("focus", replay);
+})();

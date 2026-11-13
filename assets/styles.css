@@ -2079,6 +2079,23 @@ h3.h3 {
   margin-top: 0;
   margin-bottom: 24px;
 }
+/* nav logo: same build as the product, scaled to a 30px mark */
+.brand svg {
+  overflow: visible;
+}
+@keyframes pmRiseSm {
+  from {
+    opacity: 0;
+    transform: translateY(9px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.brand .pm-letter {
+  animation-name: pmRiseSm;
+}
 /* on one column the qualifying sentence comes before the form, not after */
 @media (max-width: 899px) {
   .pilot__aside {
