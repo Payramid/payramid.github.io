@@ -1926,3 +1926,179 @@ h3.h3 {
     animation: none !important;
   }
 }
+
+/* ---- Media-led sections ---------------------------------------------------
+   Hero screenshot, demo video, proof screenshots and the comparison table.
+   The page shows the product instead of describing it. */
+.hero__shot img,
+.shot img,
+.demo__video {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 12px;
+}
+.hero__shot img {
+  border: 1px solid rgba(253, 247, 237, 0.18);
+  box-shadow: 0 24px 60px rgba(4, 28, 35, 0.35);
+}
+.demo__video {
+  background: var(--teal);
+  border: 1px solid var(--line);
+}
+.demo__note,
+.compare__note,
+.shot figcaption {
+  margin-top: 12px;
+  font-size: var(--fs-body);
+  line-height: 1.5;
+  color: var(--muted);
+}
+.shots {
+  display: grid;
+  gap: var(--grid-gap);
+}
+@media (min-width: 900px) {
+  .shots {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+.shot {
+  margin: 0;
+}
+.shot img {
+  border: 1px solid var(--line);
+}
+.compare {
+  overflow-x: auto;
+}
+.compare__table {
+  width: 100%;
+  table-layout: fixed;
+  border-collapse: collapse;
+  font-size: var(--fs-body);
+}
+.compare__table thead td {
+  width: 40%;
+}
+/* all four columns stay on screen on a phone: the Payramid column is the
+   point of the table, so it must never sit behind a sideways scroll */
+@media (max-width: 559px) {
+  .compare__table {
+    font-size: 0.8rem;
+  }
+  .compare__table th,
+  .compare__table td {
+    padding: 12px 2px;
+  }
+  .compare__table thead td {
+    width: 27%;
+  }
+  .compare__table thead th {
+    overflow-wrap: normal;
+  }
+}
+.compare__table th,
+.compare__table td {
+  padding: 16px 14px;
+  border-bottom: 1px solid var(--line);
+  text-align: center;
+  vertical-align: middle;
+}
+.compare__table thead th {
+  font-weight: 600;
+  color: var(--muted);
+}
+.compare__table tbody th {
+  text-align: left;
+  font-weight: 500;
+  padding-left: 0;
+}
+.compare__table .compare__us {
+  background: #faf3e6;
+  color: var(--teal);
+  font-weight: 700;
+}
+.compare__table .yes {
+  color: var(--teal-text);
+  font-weight: 700;
+}
+.compare__table .no {
+  color: var(--placeholder);
+}
+/* the screenshot is the hero's evidence, so it gets the wider column */
+@media (min-width: 900px) {
+  .hero__inner {
+    grid-template-columns: 0.9fr 1.1fr;
+  }
+}
+
+/* ---- Colour and labels ----------------------------------------------------
+   The product's brand gradient (teal → copper → clay, from its index.css)
+   and its secondary colours come back as surfaces, not as decoration. */
+:root {
+  --brand-gradient: linear-gradient(105deg, #0f4c5c 0%, #c75b39 58%, #f4a950 100%);
+}
+.hero h1 .em-serif {
+  color: #f4d6a0;
+  opacity: 1;
+}
+.shot .shot__label {
+  display: inline-block;
+  margin: 0 0 12px;
+  padding: 5px 12px;
+  border-radius: 999px;
+  font-size: var(--fs-micro);
+  font-weight: 600;
+  line-height: 1.4;
+  color: #fdf7ed;
+}
+.shot .shot__label--employer {
+  background: var(--teal);
+}
+.shot .shot__label--employee {
+  background: var(--copper-text);
+}
+.compare__table thead .compare__us {
+  background: var(--brand-gradient);
+  color: #fdf7ed;
+  border-radius: 12px 12px 0 0;
+  border-bottom: 0;
+}
+.compare__table .compare__manual {
+  color: var(--steel);
+}
+.compare__table tbody .compare__us {
+  color: var(--copper-text);
+}
+.compare__table tbody .compare__us .yes {
+  color: var(--teal-text);
+}
+/* pilot: the sentence sits beside the form, level with its top edge */
+.pilot__aside .lede {
+  margin-top: 0;
+  margin-bottom: 24px;
+}
+/* on one column the qualifying sentence comes before the form, not after */
+@media (max-width: 899px) {
+  .pilot__aside {
+    order: -1;
+  }
+}
+
+/* pilot: no panel. The text is centred against the height of the form. */
+@media (min-width: 900px) {
+  .split--form {
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+  }
+}
+.pilot__aside .lede {
+  max-width: none;
+  color: var(--ink);
+}
+@media (min-width: 1920px) {
+  .split--form .form-card {
+    max-width: none;
+  }
+}
